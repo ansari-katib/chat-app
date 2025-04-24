@@ -39,7 +39,7 @@ export const SocketProvider = ({ children }) => {
                 }
             }
 
-            socket.current.on("reciveMessage", handleRecievedMessage);
+            socket.current.on("receiveMessage", handleRecievedMessage);
 
             return () => {
                 socket.current.disconnect();

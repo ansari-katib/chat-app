@@ -6,6 +6,7 @@ import cookieParser from "cookie-parser"
 import authRoute from "./routes/AuthRoute.js"
 import ContactsRoute from "./routes/ContactRoute.js"
 import setupSocket from "./socket.js"
+import messagesRoutes from "./routes/MessagesRoute.js"
 dotenv.config();
 
 // DB  connection
@@ -21,12 +22,14 @@ app.use(cors({
 }))
 
 app.use("/uploads/profiles", express.static("uploads/profiles"));
+app.use("/uploads/files", express.static("uploads/files"));
 
 app.use(cookieParser());
 app.use(express.json());
 
 app.use("/api/auth",authRoute)
 app.use("/api/contacts",ContactsRoute);
+app.use("/api/messages",messagesRoutes);
 
 const server = app.listen(port, () => {
     console.log(`server is running on port : http://localhost:${port}`);

@@ -16,6 +16,7 @@ export const colors = [
   "bg-[#00000060] text-white border-[1px] border-[#00000060]"   // Black with 60% transparency
 ];
 
+
 export const getColor = (colorIndex) => {
   if (colorIndex >= 0 && colorIndex < colors.length) {
     return colors[colorIndex];

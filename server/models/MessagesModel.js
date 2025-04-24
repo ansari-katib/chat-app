@@ -34,7 +34,6 @@ const messageSchema = mongoose.Schema({
       type: Date,
       default: Date.now,
     }
-
 })
 
 const Message = mongoose.model("Messages" , messageSchema);
