@@ -7,6 +7,7 @@ import authRoute from "./routes/AuthRoute.js"
 import ContactsRoute from "./routes/ContactRoute.js"
 import setupSocket from "./socket.js"
 import messagesRoutes from "./routes/MessagesRoute.js"
+import ChannelRoute from "./routes/ChannelRoute.js"
 dotenv.config();
 
 // DB  connection
@@ -30,6 +31,7 @@ app.use(express.json());
 app.use("/api/auth",authRoute)
 app.use("/api/contacts",ContactsRoute);
 app.use("/api/messages",messagesRoutes);
+app.use("/api/channel" , ChannelRoute);
 
 const server = app.listen(port, () => {
     console.log(`server is running on port : http://localhost:${port}`);

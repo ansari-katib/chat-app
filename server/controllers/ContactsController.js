@@ -40,7 +40,7 @@ export const getContactsForDMList = async (request, response, next) => {
         if (!mongoose.Types.ObjectId.isValid(userId)) {
             return response.status(400).json({ error: "Invalid user ID" });
         }
-        
+
 
         const contacts = await Message.aggregate([
             {
@@ -58,7 +58,7 @@ export const getContactsForDMList = async (request, response, next) => {
                             if: { $eq: ["$sender", userId] },
                             then: "$recipient",
                             else: "$sender",
-                        }                        
+                        }
                     },
                     lastMessageTime: { $first: "$timestamp" },
                 }
@@ -93,6 +93,25 @@ export const getContactsForDMList = async (request, response, next) => {
         return response.status(200).json({ contacts });
     } catch (error) {
         response.status(500).send(`Internal server error: ${error.message}`);
+    }
+
+}
+
+export const getAllContact = async (request, response, next) => {
+    try {
+        const users = await User.find(
+            { _id: { $ne: request.userId } },
+            "firstName lastName _id email"
+        );
+
+        const contacts = users.map((user) => ({
+            label: user.firstName ? `${user.firstName} ${user.lastName}` : user.email,
+            value: user._id,
+        }));
+
+        return response.status(200).json({ contacts });
+    } catch (error) {
+        response.status(500).send("Internal server error", error.message);
     }
 
 }
