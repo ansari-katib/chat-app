@@ -16,7 +16,7 @@ export const SocketProvider = ({ children }) => {
     const { userInfo } = useAppStore();
 
     useEffect(() => {
-        if (userInfo) {
+        if (userInfo && userInfo.id) {
 
             socket.current = io(HOST, {
                 withCredentials: true,
@@ -28,18 +28,25 @@ export const SocketProvider = ({ children }) => {
             })
 
             const handleRecievedMessage = (message) => {
-                const { selectedChatData, selectedChatType , addMessage } = useAppStore.getState();
+                const { selectedChatData, selectedChatType, addMessage } = useAppStore.getState();
 
-                if (selectedChatType !== undefined && 
-                    (selectedChatData._id === message.sender._id || 
-                    selectedChatData._id === message.recipient._id)
-                ){
-                    console.log("message recieve : ",message);
-                    addMessage(message);     
+                if (selectedChatType !== undefined &&
+                    (selectedChatData._id === message.sender._id || selectedChatData._id === message.recipient._id)) {
+                    console.log("message recieve : ", message);
+                    addMessage(message);
                 }
             }
 
+            const handleRecievedChannelMessage = (message) => {
+                console.log("Received channel message:", message);  // ✅ Check if this logs
+                const { selectedChatData, selectedChatType, addMessage } = useAppStore.getState();
+                if (selectedChatType !== undefined && selectedChatData._id === message.channelId) {
+                    addMessage(message);
+                }
+            };
+
             socket.current.on("receiveMessage", handleRecievedMessage);
+            socket.current.on("receive-channel-message", handleRecievedChannelMessage);
 
             return () => {
                 socket.current.disconnect();

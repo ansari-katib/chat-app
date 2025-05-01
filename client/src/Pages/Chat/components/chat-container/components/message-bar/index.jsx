@@ -11,10 +11,10 @@ import apiClient from "@/lib/api-client"
 import { FILE_UPLOAD_ROUTE } from "@/utils/constant"
 
 const MessageBar = () => {
-
+    
+    const socket = useSocket();
     const emojiRef = useRef();
     const fileInputRef = useRef();
-    const socket = useSocket();
     const { selectedChatType, selectedChatData, userInfo ,setFileUploadProgress , setIsUploading } = useAppStore();
     const [message, setMessage] = useState("");
     const [emojiPickerOpen, setEmojiPickerOpen] = useState(false);
@@ -40,9 +40,17 @@ const MessageBar = () => {
                 recipient: selectedChatData._id,
                 messageType: "text",
                 fileUrl: undefined,
-            })
+            });
+        } else if(selectedChatType === "channel"){
+            socket.emit("send-channel-message", {
+                sender: userInfo.id,
+                content: message,
+                messageType: "text",
+                fileUrl: undefined,
+                channelId : selectedChatData._id,
+            });
         }
-        
+        console.log("socket message : ",message);
         setMessage("");
     }
 
@@ -80,8 +88,17 @@ const MessageBar = () => {
                             fileUrl: response.data.filePath,
                         });
 
+                    }else if(selectedChatType === "channel"){
+                        socket.emit("send-channel-message", {
+                            sender: userInfo.id,
+                            content: null,
+                            messageType: "file",
+                            fileUrl: response.data.filePath,
+                            channelId : selectedChatData._id,
+                        });
                     }
                 }
+                console.log(response.data.filePath);
             }
             console.log(file);
         } catch (error) {
