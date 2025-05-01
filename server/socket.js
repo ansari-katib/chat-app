@@ -32,11 +32,11 @@ const setupSocket = (server) => {
             .populate("recipient", "id email firstName lastName image color")
 
         if (recipientSocketId) {
-            io.to(recipientSocketId).emit("reciveMessage", messageData);
+            io.to(recipientSocketId).emit("receiveMessage", messageData);
         }
 
         if (senderSocketId) {
-            io.to(senderSocketId).emit("reciveMessage", messageData);
+            io.to(senderSocketId).emit("receiveMessage", messageData);
         }
     }
 
