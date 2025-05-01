@@ -42,6 +42,8 @@ const MessageBar = () => {
                 fileUrl: undefined,
             })
         }
+        
+        setMessage("");
     }
 
     const handleAttachmentCLick = () => {

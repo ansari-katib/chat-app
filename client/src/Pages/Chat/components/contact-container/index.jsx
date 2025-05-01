@@ -2,14 +2,14 @@ import React, { useEffect } from 'react'
 import ProfileInfo from './components/profile-info';
 import NewDm from './components/new-dm';
 import apiClient from '@/lib/api-client';
-import { GET_DM_CONTACT_ROUTE } from '@/utils/constant';
+import { GET_DM_CONTACT_ROUTE, GET_USER_CHANNEL_ROUTE } from '@/utils/constant';
 import { useAppStore } from '@/Store';
 import ContactList from '@/components/ui/ContactList';
 import CreateChannel from './components/create-channel';
 
 const ContactContainer = () => {
 
-    const { setDirectMessagesContacts , directMessagesContacts } = useAppStore();
+    const { setDirectMessagesContacts , directMessagesContacts , channels, setChannel } = useAppStore();
 
     useEffect(() => {
         const fetchContacts = async () => {
@@ -25,8 +25,24 @@ const ContactContainer = () => {
                 console.error("Failed to fetch contacts:", err.message);
             }
         };
+
+        const getChannels = async () => {
+            try {
+                const response = await apiClient.get(GET_USER_CHANNEL_ROUTE,
+                    { withCredentials: true }
+                );
+
+                if (response.data.channels) {
+                    setChannel(response.data.channels);
+                }
+            } catch (err) {
+                console.error("Failed to fetch contacts:", err.message);
+            }
+        }
+
         fetchContacts();
-    }, []);
+        getChannels();
+    }, [setChannel , setDirectMessagesContacts] );
 
 
     return (
@@ -47,6 +63,9 @@ const ContactContainer = () => {
                 <div className='flex items-center justify-between pr-10'>
                     <Title text='Channels' />
                     <CreateChannel />
+                </div>
+                <div className='max-h-[38vh] overflow-auto scroll-hidden'>
+                  <ContactList contact={channels} isChannel={true} />
                 </div>
             </div>
             <ProfileInfo />
