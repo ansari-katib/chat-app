@@ -40,7 +40,7 @@ export const SocketProvider = ({ children }) => {
             const handleRecievedChannelMessage = (message) => {
                 console.log("Received channel message:", message);  // ✅ Check if this logs
                 const { selectedChatData, selectedChatType, addMessage } = useAppStore.getState();
-                if (selectedChatType !== undefined && selectedChatData._id === message.channelId) {
+                if (selectedChatType !== undefined && selectedChatType === 'channel' && selectedChatData._id === message.channelId) {
                     addMessage(message);
                 }
             };

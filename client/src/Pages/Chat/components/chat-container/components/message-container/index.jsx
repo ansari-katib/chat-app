@@ -61,7 +61,7 @@ const MessageConatiner = () => {
     if (selectedChatData._id) {
       if (selectedChatType === "contact") {
         getMessages();
-      } else if (selectedChatType === "channel") {
+      } else if (selectedChatType === "Channel") {
         getChanneMessages();
       }
     }
@@ -131,7 +131,7 @@ const MessageConatiner = () => {
             selectedChatType === "contact" && renderDMMessages(message)
           }
           {
-            selectedChatType === "channel" && renderChannelMessages(message)
+            selectedChatType === "Channel" && renderChannelMessages(message)
           }
         </div>
       )

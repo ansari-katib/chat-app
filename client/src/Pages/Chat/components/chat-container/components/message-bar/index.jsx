@@ -11,11 +11,11 @@ import apiClient from "@/lib/api-client"
 import { FILE_UPLOAD_ROUTE } from "@/utils/constant"
 
 const MessageBar = () => {
-    
+
     const socket = useSocket();
     const emojiRef = useRef();
     const fileInputRef = useRef();
-    const { selectedChatType, selectedChatData, userInfo ,setFileUploadProgress , setIsUploading } = useAppStore();
+    const { selectedChatType, selectedChatData, userInfo, setFileUploadProgress, setIsUploading } = useAppStore();
     const [message, setMessage] = useState("");
     const [emojiPickerOpen, setEmojiPickerOpen] = useState(false);
 
@@ -41,16 +41,29 @@ const MessageBar = () => {
                 messageType: "text",
                 fileUrl: undefined,
             });
-        } else if(selectedChatType === "channel"){
+        } else if (selectedChatType === "Channel") {
             socket.emit("send-channel-message", {
                 sender: userInfo.id,
                 content: message,
                 messageType: "text",
                 fileUrl: undefined,
-                channelId : selectedChatData._id,
+                channelId: selectedChatData._id,
             });
         }
-        console.log("socket message : ",message);
+
+        // purpose : socket error handling  
+        if (selectedChatType === 'contact') {
+            console.log("contact message : ", message);
+            console.log("message type : ", selectedChatType);
+            // emit sendMessage
+
+        } else if (selectedChatType === 'Channel') {
+            console.log("channel message : ", message);
+            console.log("message type : ", selectedChatType);
+            // emit sendChannelMessage
+
+        }
+
         setMessage("");
     }
 
@@ -71,9 +84,11 @@ const MessageBar = () => {
 
                 const response = await apiClient.post(FILE_UPLOAD_ROUTE,
                     formData,
-                    { withCredentials: true , onUploadProgress:data => {
-                        setFileUploadProgress(Math.round((100 * data.loaded) / data.total));
-                    }},
+                    {
+                        withCredentials: true, onUploadProgress: data => {
+                            setFileUploadProgress(Math.round((100 * data.loaded) / data.total));
+                        }
+                    },
 
                 );
 
@@ -88,13 +103,13 @@ const MessageBar = () => {
                             fileUrl: response.data.filePath,
                         });
 
-                    }else if(selectedChatType === "channel"){
+                    } else if (selectedChatType === "Channel") {
                         socket.emit("send-channel-message", {
                             sender: userInfo.id,
                             content: null,
                             messageType: "file",
                             fileUrl: response.data.filePath,
-                            channelId : selectedChatData._id,
+                            channelId: selectedChatData._id,
                         });
                     }
                 }

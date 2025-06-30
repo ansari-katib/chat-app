@@ -37,7 +37,7 @@ const ChatHeader = () => {
           </div>
           <div >
             {
-              selectedChatType === "channel" && selectedChatData.name
+              selectedChatType === "Channel" && selectedChatData.name
             }
             {
               selectedChatType === "contact" &&
