@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: chat-app-server
+    env: node
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+    repo: https://github.com/ansari-katib/chat-app
+    branch: main
+    rootDir: server 
